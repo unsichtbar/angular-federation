@@ -22,11 +22,21 @@ Releasing a tool means deploying its static files. Neither the shell nor the
 other tools are rebuilt.
 
 ```
-apps/shell            host app, workspace registry, platform context
-tools/invoices        "Team Ledger" tool, port 4201
-tools/budget          "Team Forecast" tool, port 4202 (used in two workspaces)
-libs/platform-sdk     the shell <-> tool contract
+apps/shell          host app, workspace registry, platform context    :4200
+tools/invoices      Team Ledger: list + detail routes                  :4201
+tools/budget        Team Forecast: used in Finance and Operations      :4202
+tools/inventory     Team Stockroom: search and filters                 :4203
+tools/shifts        Team Rota: nested tab routes, in two workspaces    :4204
+tools/directory     Team Atlas: list + detail, People (HR) workspace   :4205
+libs/platform-sdk   the shell <-> tool contract
+templates/tool      starting point for new tools (see below)
 ```
+
+| Workspace | Business area | Tools |
+|---|---|---|
+| Finance | Finance | invoices, budget |
+| Operations Planning | Operations | inventory, shifts, budget, plus one unreachable tool |
+| People | HR | directory, shifts |
 
 ## The contract
 
@@ -42,6 +52,26 @@ A tool must:
 - use relative router links only, since it can be mounted at any path
 - not rely on providers beyond `PLATFORM_CONTEXT` and the router
 
+Each tool also runs on its own (`pnpm start` inside the tool) with a stub
+platform context, so the owning team can work on it without the shell.
+
+A tool's JavaScript loads once per page, so module-level state (such as
+`SWAP_REQUESTS` in `tools/shifts`) is shared by every workspace that includes
+the tool. Pending swaps approved in Operations also show as approved in People.
+Scope state to `PLATFORM_CONTEXT.workspace()` if workspaces must be isolated.
+
+## Adding a tool
+
+```sh
+pnpm new-tool <id> <port> "<Title>"     # e.g. pnpm new-tool timesheets 4206 "Timesheets"
+pnpm install
+pnpm --filter @poc/<id> start           # standalone
+```
+
+This copies `templates/tool` to `tools/<id>`. The script prints the entry to
+add to a workspace in `apps/shell/public/registry.json`. `pnpm dev` picks up
+every folder under `tools/`.
+
 ## Dependency versions
 
 Versions are declared once, in the `catalog:` block of
@@ -55,14 +85,11 @@ Native Federation's `requiredVersion: 'auto'` would copy the literal
 [`federation.versions.mjs`](federation.versions.mjs) replaces it, and
 `workspace:*`, with real ranges in each app's `federation.config.mjs`.
 
-Each tool also runs on its own (`pnpm start` inside the tool) with a stub
-platform context, so the owning team can work on it without the shell.
-
 ## Running it
 
 ```sh
 pnpm install
-pnpm dev        # shell :4200, invoices :4201, budget :4202
+pnpm dev        # shell on :4200, tools on :4201-4205
 ```
 
 Open <http://localhost:4200>. The *Operations Planning* workspace includes a
@@ -77,8 +104,9 @@ shell's build output is unchanged.
 
 ## Trade-offs
 
-- **Angular versions move together.** The catalog keeps them aligned in this repo. Angular, RxJS and the SDK are shared as
-  singletons with `strictVersion`, so all tools need compatible versions.
+- **Angular versions move together.** Angular, RxJS and the SDK are shared as
+  singletons with `strictVersion`, so all tools need compatible versions. The
+  catalog keeps them aligned in this repo.
   Upgrading Angular is a coordinated, platform-wide release. If teams must be
   free to choose their own version, wrap tools as Web Components (Angular
   Elements) instead, at the cost of bigger bundles and a looser integration.

@@ -14,8 +14,19 @@
       "label": "Operations Planning",
       "businessArea": "Operations",
       "tools": [
+        { "id": "inventory", "label": "Inventory", "team": "Team Stockroom", "remoteEntry": "http://localhost:4203/remoteEntry.json" },
+        { "id": "shifts", "label": "Shift Planner", "team": "Team Rota", "remoteEntry": "http://localhost:4204/remoteEntry.json" },
         { "id": "budget", "label": "Budget", "team": "Team Forecast", "remoteEntry": "http://localhost:4202/remoteEntry.json" },
         { "id": "missing", "label": "Not Deployed", "team": "Team Ghost", "remoteEntry": "http://localhost:4299/remoteEntry.json" }
+      ]
+    },
+    {
+      "id": "people",
+      "label": "People",
+      "businessArea": "HR",
+      "tools": [
+        { "id": "directory", "label": "Directory", "team": "Team Atlas", "remoteEntry": "http://localhost:4205/remoteEntry.json" },
+        { "id": "shifts", "label": "Shift Planner", "team": "Team Rota", "remoteEntry": "http://localhost:4204/remoteEntry.json" }
       ]
     }
   ]
