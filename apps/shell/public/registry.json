@@ -1,0 +1,22 @@
+{
+  "workspaces": [
+    {
+      "id": "finance",
+      "label": "Finance",
+      "businessArea": "Finance",
+      "tools": [
+        { "id": "invoices", "label": "Invoices", "team": "Team Ledger", "remoteEntry": "http://localhost:4201/remoteEntry.json" },
+        { "id": "budget", "label": "Budget", "team": "Team Forecast", "remoteEntry": "http://localhost:4202/remoteEntry.json" }
+      ]
+    },
+    {
+      "id": "operations",
+      "label": "Operations Planning",
+      "businessArea": "Operations",
+      "tools": [
+        { "id": "budget", "label": "Budget", "team": "Team Forecast", "remoteEntry": "http://localhost:4202/remoteEntry.json" },
+        { "id": "missing", "label": "Not Deployed", "team": "Team Ghost", "remoteEntry": "http://localhost:4299/remoteEntry.json" }
+      ]
+    }
+  ]
+}
