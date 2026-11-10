@@ -1,0 +1,14 @@
+{
+  "name": "angular-multi-app",
+  "private": true,
+  "packageManager": "pnpm@12.17.0",
+  "scripts": {
+    "build:sdk": "pnpm --filter @poc/platform-sdk build",
+    "dev": "pnpm build:sdk && pnpm -r --parallel --filter './apps/*' --filter './tools/*' run start",
+    "build": "pnpm build:sdk && pnpm -r --filter './apps/*' --filter './tools/*' run build",
+    "new-tool": "node scripts/new-tool.mjs"
+  },
+  "devDependencies": {
+    "yaml": "catalog:"
+  }
+}
