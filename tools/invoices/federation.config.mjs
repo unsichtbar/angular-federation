@@ -2,6 +2,7 @@ import {
   withNativeFederation,
   fromPackageJson,
 } from '@angular-architects/native-federation/config';
+import { resolveSharedVersions } from '../../federation.versions.mjs';
 
 export default withNativeFederation({
   name: 'invoices',
@@ -12,14 +13,14 @@ export default withNativeFederation({
 
   //shareScope: autoShareScope({level: 'minor'}),
 
-  shared: fromPackageJson({
+  shared: resolveSharedVersions(fromPackageJson({
     singleton: true,
     strictVersion: true,
     requiredVersion: 'auto',
     build: 'package',
   })
     .patch(['@angular/*'], { includeSecondaries: { keepAll: true } })
-    .get(),
+    .get()),
 
   //sharedMappings: mappingsFromWorkspace({ singleton: true }).filter(['@my-org/*']).get(),
 

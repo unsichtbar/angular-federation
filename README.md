@@ -42,6 +42,19 @@ A tool must:
 - use relative router links only, since it can be mounted at any path
 - not rely on providers beyond `PLATFORM_CONTEXT` and the router
 
+## Dependency versions
+
+Versions are declared once, in the `catalog:` block of
+[`pnpm-workspace.yaml`](pnpm-workspace.yaml), like Maven's
+`<dependencyManagement>`. Apps and tools list a dependency with `"catalog:"`
+instead of a version. `catalogMode: strict` makes `pnpm add` fail on a version
+outside the catalog, so upgrading Angular is a one-line change in one file.
+
+Native Federation's `requiredVersion: 'auto'` would copy the literal
+`"catalog:"` into `remoteEntry.json`, where the runtime can't compare it.
+[`federation.versions.mjs`](federation.versions.mjs) replaces it, and
+`workspace:*`, with real ranges in each app's `federation.config.mjs`.
+
 Each tool also runs on its own (`pnpm start` inside the tool) with a stub
 platform context, so the owning team can work on it without the shell.
 
@@ -64,7 +77,7 @@ shell's build output is unchanged.
 
 ## Trade-offs
 
-- **Angular versions move together.** Angular, RxJS and the SDK are shared as
+- **Angular versions move together.** The catalog keeps them aligned in this repo. Angular, RxJS and the SDK are shared as
   singletons with `strictVersion`, so all tools need compatible versions.
   Upgrading Angular is a coordinated, platform-wide release. If teams must be
   free to choose their own version, wrap tools as Web Components (Angular

@@ -12,15 +12,17 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
   "peerDependencies": {
-    "@angular/core": "^22.2.0"
+    "@angular/core": "catalog:"
   },
   "devDependencies": {
-    "@angular/core": "^22.2.0",
-    "typescript": "~6.0.2"
+    "@angular/core": "catalog:",
+    "typescript": "catalog:"
   }
 }

@@ -6,5 +6,8 @@
     "build:sdk": "pnpm --filter @poc/platform-sdk build",
     "dev": "pnpm build:sdk && pnpm -r --parallel --filter './apps/*' --filter './tools/*' run start",
     "build": "pnpm build:sdk && pnpm -r --filter './apps/*' --filter './tools/*' run build"
+  },
+  "devDependencies": {
+    "yaml": "catalog:"
   }
 }
